@@ -2,10 +2,10 @@
 const midtransClient = require('midtrans-client');
 
 export default async function handler(req, res) {
-  // Setup Midtrans
+  // KITA KEMBALIKAN KE FALSE KARENA DASHBOARD ANDA SANDBOX
   let snap = new midtransClient.Snap({
-    isProduction: false, // Ganti true jika sudah live
-    serverKey: 'MASUKAN_SERVER_KEY_MIDTRANS_DISINI'
+    isProduction: false, 
+    serverKey: 'Mid-server-ojIlP1e1ziOJLDWRN0Zc40vT' // Server Key Anda
   });
 
   const { id, name, total } = req.body;
