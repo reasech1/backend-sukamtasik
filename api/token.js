@@ -1,7 +1,7 @@
 const midtransClient = require('midtrans-client');
 
 export default async function handler(req, res) {
-  // --- IZIN CORS (PENTING) ---
+  // 1. HEADER KONEKSI (WAJIB ADA BIAR GAK "FAILED TO FETCH")
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -16,11 +16,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    // --- MODE SANDBOX (TESTING) ---
+    // 2. KITA GUNAKAN SETTINGAN "TRUE" (ASLI)
+    // Karena kunci Anda diawali "Mid-", bukan "SB-"
     let snap = new midtransClient.Snap({
-      isProduction: false, // JANGAN UBAH INI (TETAP FALSE)
-      // GANTI DENGAN KUNCI YANG ADA "SB-" DI DEPANNYA
-      serverKey: 'MASUKAN_SERVER_KEY_YANG_ADA_SB_DISINI' 
+      isProduction: true, // KITA UBAH JADI TRUE
+      serverKey: 'Mid-server-ojIlP1e1ziOJLDWRN0Zc40vT'
     });
 
     const { id, name, total } = req.body;
