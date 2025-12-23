@@ -1,30 +1,28 @@
 const midtransClient = require('midtrans-client');
 
 export default async function handler(req, res) {
-  // --- 1. SETTING IZIN KONEKSI (CORS) AGAR TIDAK ERROR "FAILED TO FETCH" ---
+  // --- 1. IZIN AKSES (CORS) ---
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*'); // Boleh diakses dari mana saja
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
-  // Jika browser bertanya "Boleh masuk gak?", jawab "Boleh!" (Preflight Check)
+  // Respon OK untuk cek koneksi awal
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
 
   try {
-    // --- 2. CONFIG MIDTRANS ---
-    // Cek Kunci Anda: Jika depannya "SB-Mid-...", pakai isProduction: false
-    // Jika depannya "Mid-..." (tanpa SB), pakai isProduction: true
-    
-    // Berdasarkan gambar Anda, kuncinya "Mid-server...", jadi kita coba mode Production:
+    // --- 2. CONFIG MIDTRANS (MODE SANDBOX) ---
+    // Kita PAKSA ke false, karena Dashboard Anda Sandbox.
+    // Server Key tetap pakai yang dari gambar Anda.
     let snap = new midtransClient.Snap({
-      isProduction: true, // Ubah ke true karena kunci Anda kunci Production
-      serverKey: 'Mid-server-ojIlP1e1ziOJLDWRN0Zc40vT' // Server Key dari screenshot Anda
+      isProduction: false, 
+      serverKey: 'Mid-server-ojIlP1e1ziOJLDWRN0Zc40vT'
     });
 
     const { id, name, total } = req.body;
@@ -43,7 +41,7 @@ export default async function handler(req, res) {
     res.status(200).json({ token: transaction.token });
 
   } catch (error) {
-    console.error("Error backend:", error);
+    // Kirim pesan error asli biar ketahuan salahnya apa
     res.status(500).json({ error: error.message });
   }
 }
