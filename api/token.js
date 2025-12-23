@@ -1,7 +1,7 @@
 const midtransClient = require('midtrans-client');
 
 export default async function handler(req, res) {
-  // --- 1. IZIN AKSES (CORS) ---
+  // --- IZIN CORS (PENTING) ---
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -10,19 +10,17 @@ export default async function handler(req, res) {
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
-  // Respon OK untuk cek koneksi awal
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
 
   try {
-    // --- 2. CONFIG MIDTRANS (MODE SANDBOX) ---
-    // Kita PAKSA ke false, karena Dashboard Anda Sandbox.
-    // Server Key tetap pakai yang dari gambar Anda.
+    // --- MODE SANDBOX (TESTING) ---
     let snap = new midtransClient.Snap({
-      isProduction: false, 
-      serverKey: 'Mid-server-ojIlP1e1ziOJLDWRN0Zc40vT'
+      isProduction: false, // JANGAN UBAH INI (TETAP FALSE)
+      // GANTI DENGAN KUNCI YANG ADA "SB-" DI DEPANNYA
+      serverKey: 'MASUKAN_SERVER_KEY_YANG_ADA_SB_DISINI' 
     });
 
     const { id, name, total } = req.body;
@@ -41,7 +39,6 @@ export default async function handler(req, res) {
     res.status(200).json({ token: transaction.token });
 
   } catch (error) {
-    // Kirim pesan error asli biar ketahuan salahnya apa
     res.status(500).json({ error: error.message });
   }
 }
